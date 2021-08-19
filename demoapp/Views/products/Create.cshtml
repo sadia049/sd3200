@@ -5,13 +5,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h1>
+    @ViewBag.msg
+</h1>
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@*@using (Html.BeginForm(new { enctype ="multipart/form-data"}))*@
+
+
+@*@using (Html.BeginForm("Create","Categories",HttpP, new { enctype = "multipart/form-data" }))*@
+
+
+@using (Html.BeginForm("Create", "products", FormMethod.Post, new {enctype="multipart/form-data"}))
+
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>product</h4>
         <hr />
@@ -23,6 +33,9 @@
                 @Html.ValidationMessageFor(model => model.productName, "", new { @class = "text-danger" })
             </div>
         </div>
+        @{
+            var createdDate = DateTime.Now.ToLongDateString();
+        }
 
         <div class="form-group">
             @Html.LabelFor(model => model.categoryId, "categoryId", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -52,10 +65,14 @@
             </div>
         </div>
 
+
+
         <div class="form-group">
             @Html.LabelFor(model => model.createdDate, htmlAttributes: new { @class = "control-label col-md-2" })
+
+
             <div class="col-md-10">
-                @Html.EditorFor(model => model.createdDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.createdDate, new { htmlAttributes = new { @class = "form-control datetimepicker1" } })
                 @Html.ValidationMessageFor(model => model.createdDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -63,7 +80,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.modifiedDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.modifiedDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.modifiedDate, new { htmlAttributes = new { @class = "form-control datetimepicker1" } })
                 @Html.ValidationMessageFor(model => model.modifiedDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -89,10 +106,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.image, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.image, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.image, new { htmlAttributes = new { @class = "form-control" } })*@
+                <input type="file" id="imgfile" name="imgfile" class="btn btn-info" />
                 @Html.ValidationMessageFor(model => model.image, "", new { @class = "text-danger" })
             </div>
         </div>
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.quanity, htmlAttributes: new { @class = "control-label col-md-2" })

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -49,18 +50,107 @@ namespace demoapp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "productId,productName,categoryId,isActive,isdelete,createdDate,modifiedDate,description,isFeatured,image,quanity,price")] product product)
+        public ActionResult Create([Bind(Include = "productId,productName,categoryId,isActive,isdelete,createdDate,modifiedDate,description,isFeatured,image,quanity,price")] product product,HttpPostedFileBase imgfile)
         {
+            string path=uploadimage(imgfile);
+
             if (ModelState.IsValid)
             {
+                product.image = path;
                 db.products.Add(product);
                 db.SaveChanges();
                 return RedirectToAction("Index");
+           
             }
+            ViewBag.msg = "data Added";
 
             ViewBag.categoryId = new SelectList(db.categories, "categoryId", "categoryName", product.categoryId);
             return View(product);
         }
+
+        public string uploadimage(HttpPostedFileBase file)
+
+        {
+
+            Random r = new Random();
+
+            string path = "-1";
+
+            int random = r.Next();
+
+            if (file != null && file.ContentLength > 0)
+
+            {
+
+                string extension = System.IO.Path.GetExtension(file.FileName);
+
+                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".jpeg") || extension.ToLower().Equals(".png"))
+
+                {
+
+                    try
+
+                    {
+
+
+
+                        path = Path.Combine(Server.MapPath("~/Content/upload"), random + Path.GetFileName(file.FileName));
+
+                        file.SaveAs(path);
+
+                        path = "~/Content/upload/" + random + Path.GetFileName(file.FileName);
+
+
+
+                        //    ViewBag.Message = "File uploaded successfully";
+
+                    }
+
+                    catch (Exception ex)
+
+                    {
+
+                        path = "-1";
+
+                    }
+
+                }
+
+                else
+
+                {
+
+                    Response.Write("<script>alert('Only jpg ,jpeg or png formats are acceptable....'); </script>");
+
+                }
+
+            }
+
+
+
+            else
+
+            {
+
+                Response.Write("<script>alert('Please select a file'); </script>");
+
+                path = "-1";
+
+            }
+
+
+
+
+
+
+
+            return path;
+
+        }
+
+
+
+
 
         // GET: products/Edit/5
         public ActionResult Edit(int? id)

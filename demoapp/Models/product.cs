@@ -1,4 +1,4 @@
-﻿using System;
+﻿   using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -29,9 +29,11 @@ namespace demoapp.Models
         public string description { get; set; }
         public bool isFeatured { get; set; }
         public string image { get; set; }
+        
         [Required]
         [Range(typeof(int),"1","500",ErrorMessage ="Invalid Quantity")]
         public int quanity { get; set; }
+       
 
         public int price { get; set; }
     }
